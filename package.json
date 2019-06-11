@@ -1,0 +1,36 @@
+{
+  "name": "express-error",
+  "version": "1.0.0",
+  "description": "Middleware for Express.js which makes it simpler to code HTTP error responses",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alicraigmile/express-error.git"
+  },
+  "author": "Ali Craigmile <ali@craigmile.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/alicraigmile/express-error"
+  },
+  "main": "src/express-error.js",
+  "scripts": {
+    "changelog": "LASTTAG=`git describe --tags --abbrev=0`; echo \"======= Changes since last tag ($LASTTAG) =======\"; git log $LASTTAG..HEAD --oneline",
+    "lint": "npm run lint:js",
+    "lint:js": "eslint --ext .js src test",
+    "prelint": "npm run prettier",
+    "prettier": "prettier --tab-width=4 --single-quote --print-width=120 \"./src/**/*.js\" \"./test/**/*js\" --write",
+    "push": "npm run push:git",
+    "push:git": "git push -u --tags origin HEAD:master",
+    "test": "npm run lint && npm run test:unit",
+    "test:unit": "mocha \"./test/**/*js\""
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-prettier": "^3.1.0",
+    "mocha": "^6.1.4",
+    "supertest": "^4.0.2"
+  }
+}
