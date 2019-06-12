@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const ErrorCodes = {
     200: 'Ok',
     400: 'Unacceptable',
@@ -24,6 +23,7 @@ function registerErrorHandlers(options, req, res, next) {
     res.error.json = function jsonErrorMessage(status, message, debug) {
         const headline = errorHeadline(status);
         const jsonMessage = `${headline}: ${message}`;
+        // eslint-disable-next-line no-console
         console.error(debug);
         return res.status(status).json({ status, message: jsonMessage });
     };
@@ -32,23 +32,31 @@ function registerErrorHandlers(options, req, res, next) {
         const headline = errorHeadline(status);
         const errorTemplate = template || 'error';
 
-        return res.status(status).render(errorTemplate, { status, message, headline });
+        return res
+            .status(status)
+            .type('html')
+            .render(errorTemplate, { status, message, headline });
     };
 
     res.error.text = function textErrorMessage(status, message) {
         const headline = errorHeadline(status);
         const textMessage = `${headline}: ${message}`;
 
-        return res.status(status).send(textMessage);
+        return res
+            .status(status)
+            .type('txt')
+            .send(textMessage);
     };
 
     next();
 }
 
-export default function(options) {
+function middleware(options) {
     const parameters = options || {};
 
     return function expressErrorMiddleware(req, res, next) {
         registerErrorHandlers(parameters, req, res, next);
     };
 }
+
+export default middleware;
