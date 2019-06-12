@@ -9,9 +9,18 @@ const { describe } = mocha;
 const { it } = mocha;
 
 const router = Router({ mergeParams: true })
-    .get('/a', async (req, res) => res.error.json(500, 'Software failure - very bad'))
-    .get('/b', async (req, res) => res.error.html(500, 'Software failure - very bad'))
-    .get('/b', async (req, res) => res.error.text(500, 'Software failure - very bad'));
+    .get('/a', async (req, res, next) => {
+        res.error.json(500, 'Software failure - very bad');
+        return next;
+    })
+    .get('/b', async (req, res, next) => {
+        res.error.html(500, 'Software failure - very bad');
+        return next;
+    })
+    .get('/c', async (req, res, next) => {
+        res.error.text(500, 'Software failure - very bad');
+        return next;
+    });
 
 const app = express();
 app.use(expressError());
@@ -28,7 +37,7 @@ describe('Status', () => {
 
     it('html error response', done => {
         request(app)
-            .get('/a')
+            .get('/b')
             .expect('Content-Type', /html/)
             .expect(500)
             .end(err => (err ? done(err) : done()));
@@ -36,7 +45,7 @@ describe('Status', () => {
 
     it('text error response', done => {
         request(app)
-            .get('/a')
+            .get('/c')
             .expect('Content-Type', /text/)
             .expect(500)
             .end(err => (err ? done(err) : done()));
